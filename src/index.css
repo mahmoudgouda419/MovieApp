@@ -61,7 +61,8 @@
     @apply mt-20;
 
     & ul {
-      @apply flex flex-row overflow-y-auto gap-5 -mt-10 w-full hide-scrollbar;
+
+      @apply flex flex-row overflow-x-auto gap-5 -mt-10 w-full hide-scrollbar py-4;
     }
 
     & ul li {
@@ -76,7 +77,22 @@
       @apply w-[127px] h-[163px] rounded-lg object-cover -ml-3.5;
     }
   }
+  @media (max-width: 768px) {
+    .trending ul li {
+      min-width: 160px;
+    }
 
+
+    .trending ul li img {
+      width: 100px;
+      height: 140px;
+    }
+
+    .trending ul li p {
+      font-size: 120px;
+      -webkit-text-stroke: 3px rgba(206, 206, 251, 0.5);
+    }
+  }
   .search {
     @apply w-full bg-light-100/5 px-4 py-3 rounded-lg mt-10 max-w-3xl mx-auto;
 

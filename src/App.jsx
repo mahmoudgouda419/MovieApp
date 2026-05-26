@@ -19,6 +19,15 @@ const API_OPTIONS = {
     }
 }
 
+
+const genres = [
+    { id: 28, name: "Action" },
+    { id: 35, name: "Comedy" },
+    { id: 27, name: "Horror" },
+    { id: 878, name: "Sci-Fi" },
+    { id: 10749, name: "Romance" },
+];
+
 function App() {
     const [searchTerm, setSearchTerm] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
@@ -28,6 +37,7 @@ function App() {
     const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
     useDebounce(()=> setDebouncedSearchTerm(searchTerm), 500, [searchTerm]);
     const [selectedMovie, setSelectedMovie] = useState(null);
+    const [selectedGenre, setSelectedGenre] = useState(null);
 
     const fetchMovies = async (query = '') => {
         setIsLoading(true);
@@ -36,7 +46,9 @@ function App() {
         try {
             const endpoint = query
                 ? `${API_BASE_URL}/search/movie?query=${encodeURIComponent(query)}`
-                : `${API_BASE_URL}/discover/movie?sort_by=popularity.desc`;
+                : selectedGenre
+                    ? `${API_BASE_URL}/discover/movie?with_genres=${selectedGenre}`
+                    : `${API_BASE_URL}/discover/movie?sort_by=popularity.desc`;
 
             const response = await fetch(endpoint, API_OPTIONS)
 
@@ -79,7 +91,7 @@ function App() {
 
     useEffect(() => {
         fetchMovies(debouncedSearchTerm);
-    }, [debouncedSearchTerm])
+    }, [debouncedSearchTerm, selectedGenre])
 
     useEffect(() => {
         loadTrendingMovies()
@@ -93,6 +105,23 @@ function App() {
           <img src='./hero-img.png' alt="heroBanner" />
           <h1>Find <span className= "text-gradient">Movies</span> You Will Enjoy Without the Hassle</h1>
           <Search searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
+            <div className="genres">
+                {genres.map((genre) => (
+                    <button
+                        key={genre.id}
+                        onClick={() =>
+                            setSelectedGenre(
+                                selectedGenre === genre.id ? null : genre.id
+                            )
+                        }
+                        className={`genre-btn ${
+                            selectedGenre === genre.id ? 'active' : ''
+                        }`}
+                    >
+                        {genre.name}
+                    </button>
+                ))}
+            </div>
         </header>
 
           {trendingMovies.length > 0 && (
@@ -200,3 +229,5 @@ function App() {
 }
 
 export default App
+
+
